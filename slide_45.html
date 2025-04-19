@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng sắp xếp dữ liệu</title>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            cursor: pointer;
+            background-color: #f2f2f2;
+        }
+
+        th:hover {
+            background-color: #ddd;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th data-sort="asc" data-value-type="number">STT &#x1F53C;</th>
+                <th data-sort="desc" data-value-type="number">ID &#x1F53C;</th>
+                <th data-sort="asc" data-value-type="string">Name &#x1F53C;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>20187287</td>
+                <td>Bùi Đức Anh</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>20187347</td>
+                <td>Đỗ Thị Thùy Trang</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>20187322</td>
+                <td>Đồng Quang Huy</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>20207683</td>
+                <td>Dư Xuân Tùng Lâm</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>20168228</td>
+                <td>Hoàng Quốc Huy</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>20198138</td>
+                <td>Nguyễn Hoàng Ly</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>20207656</td>
+                <td>Nguyễn Nam Anh</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.querySelectorAll("thead th").forEach((header, columnIndex) => {
+            header.addEventListener("click", () => {
+                let table = document.getElementById("studentTable");
+                let rows = Array.from(table.querySelectorAll("tbody tr")); // Lấy tất cả các hàng trong tbody
+                let valueType = header.getAttribute("data-value-type");
+                let sortOrder = header.getAttribute("data-sort") === "asc" ? 1 : -1;
+
+                rows.sort((rowA, rowB) => {
+                    let cellA = rowA.cells[columnIndex].textContent.trim();
+                    let cellB = rowB.cells[columnIndex].textContent.trim();
+
+                    if (columnIndex === 2) { // Nếu là cột Name thì sắp xếp theo tên
+                        let nameA = cellA.split(" ").pop(); // Lấy từ cuối cùng (tên)
+                        let nameB = cellB.split(" ").pop();
+                        return sortOrder * nameA.localeCompare(nameB, 'vi');
+                    } else if (valueType === "number") {
+                        return sortOrder * (parseInt(cellA) - parseInt(cellB));
+                    } else {
+                        return sortOrder * cellA.localeCompare(cellB, 'vi'); // Sắp xếp bình thường
+                    }
+                });
+
+                rows.forEach(row => table.querySelector("tbody").appendChild(row)); // Cập nhật bảng
+
+                header.setAttribute("data-sort", sortOrder === 1 ? "desc" : "asc");
+            });
+        });
+    </script>
+
+</body>
+</html>
